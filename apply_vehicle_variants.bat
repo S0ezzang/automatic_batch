@@ -1,9 +1,14 @@
 @echo off
-setlocal EnableExtensions EnableDelayedExpansion
 
 REM ==================================================
-REM 0-1. 로그 파일 설정
+REM Check if already running with logging
 REM ==================================================
+if "%LOGGING_ENABLED%"=="1" goto :start
+
+REM ==================================================
+REM Setup logging and restart
+REM ==================================================
+setlocal EnableExtensions EnableDelayedExpansion
 for /f "tokens=2 delims==" %%I in ('wmic os get localdatetime /value') do set datetime=%%I
 set LOG_FILE=%~dp0logs\apply_vehicle_variants_%datetime:~0,8%_%datetime:~8,6%.log
 if not exist "%~dp0logs" mkdir "%~dp0logs"
@@ -15,11 +20,13 @@ echo Log file: %LOG_FILE%
 echo ========================================
 echo.
 
-REM Redirect all output to both console and log file
-call :main 2>&1 | powershell -NoProfile -Command "$input | Tee-Object -FilePath '%LOG_FILE%'"
+REM Restart this script with logging enabled
+set LOGGING_ENABLED=1
+cmd /c ""%~f0" 2>&1" | powershell -NoProfile -Command "$input | Tee-Object -FilePath '%LOG_FILE%'"
 exit /b %ERRORLEVEL%
 
-:main
+:start
+setlocal EnableExtensions EnableDelayedExpansion
 
 REM ==================================================
 REM 0. 경로 정의
@@ -154,7 +161,6 @@ echo ===== ALL CARS COMPLETED SUCCESSFULLY =====
 echo.
 for /f "tokens=2 delims==" %%I in ('wmic os get localdatetime /value') do set endtime=%%I
 echo Completed: %endtime:~0,4%-%endtime:~4,2%-%endtime:~6,2% %endtime:~8,2%:%endtime:~10,2%:%endtime:~12,2%
-echo Log file: %LOG_FILE%
 
 exit /b 0
 
@@ -166,6 +172,5 @@ echo.
 echo [ERROR] Batch execution failed.
 for /f "tokens=2 delims==" %%I in ('wmic os get localdatetime /value') do set endtime=%%I
 echo Failed at: %endtime:~0,4%-%endtime:~4,2%-%endtime:~6,2% %endtime:~8,2%:%endtime:~10,2%:%endtime:~12,2%
-echo Log file: %LOG_FILE%
 pause
 exit /b 1
