@@ -27,7 +27,7 @@ REM ==================================================
 set LAUNCH_SRC=E:\shared\soyoung.jung\my_batch\launch_cfg.bat
 set LAUNCH_DST=E:\shared\_git_auto\fcm55\fcm55_hkmc\util\launch_cfg.bat
 set PROJECT_FILE=E:\shared\_git_auto\fcm55\fcm55_hkmc\.project
-set BSW_BAT=E:\shared\_git_auto\fcm55\fcm55_hkmc\references\BswDevStart\BswDevStart_r2.bat
+set BSW_BAT=E:\shared\_git_auto\fcm55\fcm55_hkmc\references\BswDevStart\BswDevStart_r3.bat
 set FCM55_ROOT=E:\shared\_git_auto\fcm55\fcm55_hkmc
 
 
@@ -72,12 +72,12 @@ if errorlevel 1 (
 )
 
 REM ==================================================
-REM 4. BswDevStart_r2.bat PROJECT_NAME 수정
+REM 4. BswDevStart_r3.bat PROJECT_NAME 수정
 REM ==================================================
-echo [STEP 4] Update PROJECT_NAME in BswDevStart_r2.bat
+echo [STEP 4] Update PROJECT_NAME in BswDevStart_r3.bat
 
 if not exist "%BSW_BAT%" (
-    echo [ERROR] BswDevStart_r2.bat file not found
+    echo [ERROR] BswDevStart_r3.bat file not found
     pause
     exit /b 1
 )
@@ -85,11 +85,11 @@ if not exist "%BSW_BAT%" (
 REM 환경변수로 경로 전달
 set "PS_BSW_BAT=%BSW_BAT%"
 
-echo Updating BswDevStart_r2.bat file...
+echo Updating BswDevStart_r3.bat file...
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0update_bswdevstart.ps1"
 
 if errorlevel 1 (
-    echo [ERROR] Failed to update BswDevStart_r2.bat file
+    echo [ERROR] Failed to update BswDevStart_r3.bat file
     pause
     exit /b 1
 )
@@ -121,7 +121,7 @@ for %%C in (%CAR_LIST%) do (
 
     REM ---------- 6. EB Import ----------
     echo [%%C] Import project
-    cmd /c ""%TRESOS_CMD_BASE%" importProject -c %FCM55_ROOT%"
+    cmd /c ""%TRESOS_CMD_BASE%" import %FCM55_ROOT%"
     if errorlevel 1 (
         echo [WARNING] Import failed - project may already exist, continuing...
     )
@@ -134,7 +134,7 @@ for %%C in (%CAR_LIST%) do (
     > temp_car_input.txt <nul set /p="%%C"
     echo.>> temp_car_input.txt
 
-    call BswDevStart_r2.bat < temp_car_input.txt
+    call BswDevStart_r3.bat < temp_car_input.txt
     if exist temp_car_input.txt del temp_car_input.txt
     popd
     if errorlevel 1 goto :fail
