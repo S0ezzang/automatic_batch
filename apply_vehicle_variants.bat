@@ -137,6 +137,9 @@ for %%C in (%CAR_LIST%) do (
     echo [%%C] Run BswDevStart
     pushd "E:\shared\_git_auto\fcm55\fcm55_hkmc\references\BswDevStart"
 
+    REM Set UTF-8 code page to support Unicode characters in Python scripts
+    chcp 65001 >nul
+
     REM Create temporary input file with vehicle model (no trailing space)
     > temp_car_input.txt <nul set /p="%%C"
     echo.>> temp_car_input.txt
