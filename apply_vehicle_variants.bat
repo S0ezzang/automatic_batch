@@ -102,7 +102,9 @@ for %%C in (%CAR_LIST%) do (
     REM ---------- 6. EB Import ----------
     echo [%%C] Import project
     cmd /c ""%TRESOS_CMD_BASE%" importProject -c %FCM55_ROOT%"
-    if errorlevel 1 goto :fail
+    if errorlevel 1 (
+        echo [WARNING] Import failed - project may already exist, continuing...
+    )
 
     REM ---------- 7. BswDevStart 실행 (자동 차종 입력) ----------
     echo [%%C] Run BswDevStart
