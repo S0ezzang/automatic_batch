@@ -109,7 +109,13 @@ for %%C in (%CAR_LIST%) do (
     REM ---------- 7. BswDevStart 실행 (자동 차종 입력) ----------
     echo [%%C] Run BswDevStart
     pushd "E:\shared\_git_auto\fcm55\fcm55_hkmc\references\BswDevStart"
-    echo %%C | call BswDevStart_r2.bat
+
+    REM Create temporary input file with vehicle model (no trailing space)
+    > temp_car_input.txt <nul set /p="%%C"
+    echo.>> temp_car_input.txt
+
+    call BswDevStart_r2.bat < temp_car_input.txt
+    if exist temp_car_input.txt del temp_car_input.txt
     popd
     if errorlevel 1 goto :fail
 
