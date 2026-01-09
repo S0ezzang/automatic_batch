@@ -13,7 +13,8 @@ if (-not (Test-Path -LiteralPath $bswBat)) {
 
 try {
     $content = Get-Content -LiteralPath $bswBat -ErrorAction Stop
-    $content = $content -replace 'SET "PROJECT_NAME=.*?"', "SET `"PROJECT_NAME=$projectName`""
+    # Replace PROJECT_NAME value while preserving surrounding quotes and structure
+    $content = $content -replace '(PROJECT_NAME=)[^"]+', "`$1$projectName"
     Set-Content -LiteralPath $bswBat -Value $content -ErrorAction Stop
     Write-Host "Successfully updated BswDevStart_r2.bat file"
     exit 0
