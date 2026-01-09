@@ -42,11 +42,16 @@ REM 환경변수로 경로 전달
 set "PS_PROJECT_FILE=%PROJECT_FILE%"
 set "PS_PROJECT_NAME=%PROJECT_NAME%"
 
+echo Updating .project file...
 powershell -NoProfile -Command ^
-"$p=$env:PS_PROJECT_FILE; $n=$env:PS_PROJECT_NAME; ^
- $c = Get-Content -LiteralPath $p; ^
+"$ErrorActionPreference='Stop'; ^
+ $p=$env:PS_PROJECT_FILE; $n=$env:PS_PROJECT_NAME; ^
+ Write-Host \"PowerShell received path: $p\"; ^
+ if (-not (Test-Path -LiteralPath $p)) { throw \"File not found: $p\" }; ^
+ $c = Get-Content -LiteralPath $p -ErrorAction Stop; ^
  $c = $c -replace '<name>FCM55.*?</name>', \"<name>$n</name>\"; ^
- Set-Content -LiteralPath $p -Value $c"
+ Set-Content -LiteralPath $p -Value $c -ErrorAction Stop; ^
+ Write-Host \"Successfully updated .project file\""
 
 if errorlevel 1 (
     echo [ERROR] Failed to update .project file
@@ -68,11 +73,16 @@ if not exist "%BSW_BAT%" (
 REM 환경변수로 경로 전달
 set "PS_BSW_BAT=%BSW_BAT%"
 
+echo Updating BswDevStart_r2.bat file...
 powershell -NoProfile -Command ^
-"$p=$env:PS_BSW_BAT; $n=$env:PS_PROJECT_NAME; ^
- $c = Get-Content -LiteralPath $p; ^
+"$ErrorActionPreference='Stop'; ^
+ $p=$env:PS_BSW_BAT; $n=$env:PS_PROJECT_NAME; ^
+ Write-Host \"PowerShell received path: $p\"; ^
+ if (-not (Test-Path -LiteralPath $p)) { throw \"File not found: $p\" }; ^
+ $c = Get-Content -LiteralPath $p -ErrorAction Stop; ^
  $c = $c -replace 'SET \"PROJECT_NAME=.*?\"', \"SET \`\"PROJECT_NAME=$n\`\"\"; ^
- Set-Content -LiteralPath $p -Value $c"
+ Set-Content -LiteralPath $p -Value $c -ErrorAction Stop; ^
+ Write-Host \"Successfully updated BswDevStart_r2.bat file\""
 
 if errorlevel 1 (
     echo [ERROR] Failed to update BswDevStart_r2.bat file
