@@ -128,7 +128,7 @@ for %%C in (%CAR_LIST%) do (
 
     REM ---------- 6. EB Import ----------
     echo [%%C] Import project
-    cmd /c ""%TRESOS_CMD_BASE%" import %FCM55_ROOT%"
+    cmd /c ""%TRESOS_CMD_BASE%" importProject -c %FCM55_ROOT%"
     if errorlevel 1 (
         echo [WARNING] Import failed - project may already exist, continuing...
     )
