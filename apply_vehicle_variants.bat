@@ -38,12 +38,15 @@ if not exist "%PROJECT_FILE%" (
     exit /b 1
 )
 
+REM 환경변수로 경로 전달
+set "PS_PROJECT_FILE=%PROJECT_FILE%"
+set "PS_PROJECT_NAME=%PROJECT_NAME%"
+
 powershell -NoProfile -Command ^
-"$p='%PROJECT_FILE%'; $n='%PROJECT_NAME%'; ^
- if (!(Test-Path $p)) { throw 'file not found' }; ^
- $c = Get-Content $p; ^
+"$p=$env:PS_PROJECT_FILE; $n=$env:PS_PROJECT_NAME; ^
+ $c = Get-Content -LiteralPath $p; ^
  $c = $c -replace '<name>FCM55.*?</name>', \"<name>$n</name>\"; ^
- Set-Content -Path $p -Value $c"
+ Set-Content -LiteralPath $p -Value $c"
 
 if errorlevel 1 (
     echo [ERROR] Failed to update .project file
@@ -62,12 +65,14 @@ if not exist "%BSW_BAT%" (
     exit /b 1
 )
 
+REM 환경변수로 경로 전달
+set "PS_BSW_BAT=%BSW_BAT%"
+
 powershell -NoProfile -Command ^
-"$p='%BSW_BAT%'; $n='%PROJECT_NAME%'; ^
- if (!(Test-Path $p)) { throw 'file not found' }; ^
- $c = Get-Content $p; ^
+"$p=$env:PS_BSW_BAT; $n=$env:PS_PROJECT_NAME; ^
+ $c = Get-Content -LiteralPath $p; ^
  $c = $c -replace 'SET \"PROJECT_NAME=.*?\"', \"SET \`\"PROJECT_NAME=$n\`\"\"; ^
- Set-Content -Path $p -Value $c"
+ Set-Content -LiteralPath $p -Value $c"
 
 if errorlevel 1 (
     echo [ERROR] Failed to update BswDevStart_r2.bat file
