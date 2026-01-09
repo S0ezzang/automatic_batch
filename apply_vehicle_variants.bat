@@ -106,7 +106,9 @@ for %%C in (%CAR_LIST%) do (
 
     REM ---------- 7. BswDevStart 실행 (자동 차종 입력) ----------
     echo [%%C] Run BswDevStart
-    echo %%C | cmd /c ""%BSW_BAT%""
+    pushd "E:\shared\_git_auto\fcm55\fcm55_hkmc\references\BswDevStart"
+    echo %%C | call BswDevStart_r2.bat
+    popd
     if errorlevel 1 goto :fail
 
     REM ---------- 8. Generate ----------
