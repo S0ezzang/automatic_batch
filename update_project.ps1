@@ -13,7 +13,7 @@ if (-not (Test-Path -LiteralPath $projectFile)) {
 
 try {
     $content = Get-Content -LiteralPath $projectFile -ErrorAction Stop
-    $content = $content -replace '<name>FCM55.*?</name>', "<name>$projectName</name>"
+    $content = $content -replace '<name>FCM55S?.*?</name>', "<name>$projectName</name>"
     Set-Content -LiteralPath $projectFile -Value $content -ErrorAction Stop
     Write-Host "Successfully updated .project file"
     exit 0

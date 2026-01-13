@@ -29,13 +29,47 @@ exit /b %ERRORLEVEL%
 setlocal EnableExtensions EnableDelayedExpansion
 
 REM ==================================================
-REM 0. 경로 정의
+REM 0. 프로젝트 선택
+REM ==================================================
+echo ========================================
+echo Select Project:
+echo ========================================
+echo 1. FCM55   (JG, RS4)
+echo 2. FCM55S  (DL3_PE2, HE, QY2I, SX3I, SX3K, MX5_FL)
+echo ========================================
+echo.
+
+set /p PROJECT_CHOICE="Enter your choice (1 or 2): "
+
+if "%PROJECT_CHOICE%"=="1" (
+    set PROJECT_ROOT=E:\shared\_git_auto\fcm55\fcm55_hkmc
+    set PROJECT_TYPE=FCM55
+    set CAR_LIST=JG RS4
+    echo.
+    echo Selected: FCM55 (JG, RS4)
+) else if "%PROJECT_CHOICE%"=="2" (
+    set PROJECT_ROOT=E:\shared\_git_auto\fcm55\fcm55s_hkmc
+    set PROJECT_TYPE=FCM55S
+    set CAR_LIST=DL3_PE2 HE QY2I SX3I SX3K MX5_FL
+    echo.
+    echo Selected: FCM55S (DL3_PE2, HE, QY2I, SX3I, SX3K, MX5_FL)
+) else (
+    echo.
+    echo [ERROR] Invalid choice. Please select 1 or 2.
+    pause
+    exit /b 1
+)
+
+echo.
+
+REM ==================================================
+REM 1. 경로 정의
 REM ==================================================
 set LAUNCH_SRC=E:\shared\soyoung.jung\my_batch\launch_cfg.bat
-set LAUNCH_DST=E:\shared\_git_auto\fcm55\fcm55_hkmc\util\launch_cfg.bat
-set PROJECT_FILE=E:\shared\_git_auto\fcm55\fcm55_hkmc\.project
-set BSW_BAT=E:\shared\_git_auto\fcm55\fcm55_hkmc\references\BswDevStart\BswDevStart_r3.bat
-set FCM55_ROOT=E:\shared\_git_auto\fcm55\fcm55_hkmc
+set LAUNCH_DST=%PROJECT_ROOT%\util\launch_cfg.bat
+set PROJECT_FILE=%PROJECT_ROOT%\.project
+set BSW_BAT=%PROJECT_ROOT%\references\BswDevStart\BswDevStart_r3.bat
+set FCM55_ROOT=%PROJECT_ROOT%
 
 
 REM ==================================================
@@ -49,7 +83,7 @@ REM ==================================================
 REM 2. 오늘 날짜 기반 PROJECT_NAME 생성
 REM ==================================================
 for /f %%i in ('powershell -command "Get-Date -Format yyyyMMdd"') do set TODAY=%%i
-set PROJECT_NAME=FCM55_%TODAY%
+set PROJECT_NAME=%PROJECT_TYPE%_%TODAY%
 echo PROJECT_NAME=%PROJECT_NAME%
 
 REM ==================================================
@@ -112,12 +146,7 @@ IF "%TRESOS_CMD_BASE%"=="" (
 )
 
 REM ==================================================
-REM 6. 차종 리스트
-REM ==================================================
-set CAR_LIST=JG RS4_FL
-
-REM ==================================================
-REM 7. 차종별 (Import → BswDevStart → Generate) 반복
+REM 6. 차종별 (Import → BswDevStart → Generate) 반복
 REM ==================================================
 for %%C in (%CAR_LIST%) do (
 
@@ -135,7 +164,7 @@ for %%C in (%CAR_LIST%) do (
 
     REM ---------- 7. BswDevStart 실행 (자동 차종 입력) ----------
     echo [%%C] Run BswDevStart
-    pushd "E:\shared\_git_auto\fcm55\fcm55_hkmc\references\BswDevStart"
+    pushd "%PROJECT_ROOT%\references\BswDevStart"
 
     REM Set UTF-8 code page to support Unicode characters in Python scripts
     chcp 65001 >nul
