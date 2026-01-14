@@ -175,6 +175,10 @@ for %%C in (%CAR_LIST%) do (
     REM Set UTF-8 code page to support Unicode characters in Python scripts
     chcp 65001 >nul
 
+    REM Set Python environment variables for UTF-8 encoding
+    set PYTHONUTF8=1
+    set PYTHONIOENCODING=utf-8
+
     REM Create temporary input file with vehicle model (no trailing space)
     > temp_car_input.txt <nul set /p="%%C"
     echo.>> temp_car_input.txt
