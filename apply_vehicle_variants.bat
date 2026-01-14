@@ -41,25 +41,31 @@ echo.
 
 set /p PROJECT_CHOICE="Enter your choice (1 or 2): "
 
-if "%PROJECT_CHOICE%"=="1" (
-    set PROJECT_ROOT=E:\shared\_git_auto\fcm55\fcm55_hkmc
-    set PROJECT_TYPE=FCM55
-    set CAR_LIST=JG RS4
-    echo.
-    echo Selected: FCM55 (JG, RS4)
-) else if "%PROJECT_CHOICE%"=="2" (
-    set PROJECT_ROOT=E:\shared\_git_auto\fcm55\fcm55s_hkmc
-    set PROJECT_TYPE=FCM55S
-    set CAR_LIST=DL3_PE2 HE QY2I SX3I SX3K MX5_FL
-    echo.
-    echo Selected: FCM55S (DL3_PE2, HE, QY2I, SX3I, SX3K, MX5_FL)
-) else (
-    echo.
-    echo [ERROR] Invalid choice. Please select 1 or 2.
-    pause
-    exit /b 1
-)
+if "%PROJECT_CHOICE%"=="1" goto :project_fcm55
+if "%PROJECT_CHOICE%"=="2" goto :project_fcm55s
 
+echo.
+echo [ERROR] Invalid choice. Please select 1 or 2.
+pause
+exit /b 1
+
+:project_fcm55
+set PROJECT_ROOT=E:\shared\_git_auto\fcm55\fcm55_hkmc
+set PROJECT_TYPE=FCM55
+set CAR_LIST=JG RS4
+echo.
+echo Selected: FCM55 (JG, RS4)
+goto :project_selected
+
+:project_fcm55s
+set PROJECT_ROOT=E:\shared\_git_auto\fcm55\fcm55s_hkmc
+set PROJECT_TYPE=FCM55S
+set CAR_LIST=DL3_PE2 HE QY2I SX3I SX3K MX5_FL
+echo.
+echo Selected: FCM55S (DL3_PE2, HE, QY2I, SX3I, SX3K, MX5_FL)
+goto :project_selected
+
+:project_selected
 echo.
 
 REM ==================================================
